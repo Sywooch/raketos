@@ -1,0 +1,1 @@
+mysql -p -u setyes car < /var/www/setyes/data/www/car.raketos.ru/auto.sql

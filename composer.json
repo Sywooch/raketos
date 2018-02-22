@@ -1,0 +1,67 @@
+{
+    "name": "yiisoft/yii2-app-advanced",
+    "description": "Yii 2 Advanced Project Template",
+    "keywords": ["yii2", "framework", "advanced", "project template"],
+    "homepage": "http://www.yiiframework.com/",
+    "type": "project",
+    "license": "BSD-3-Clause",
+    "support": {
+        "issues": "https://github.com/yiisoft/yii2/issues?state=open",
+        "forum": "http://www.yiiframework.com/forum/",
+        "wiki": "http://www.yiiframework.com/wiki/",
+        "irc": "irc://irc.freenode.net/yii",
+        "source": "https://github.com/yiisoft/yii2"
+    },
+    "minimum-stability": "stable",
+    "require": {
+        "php": ">=5.4.0",
+        "yiisoft/yii2": "~2.0.6",
+        "yiisoft/yii2-authclient": "*",
+        "yiisoft/yii2-bootstrap": "~2.0.0",
+        "yiisoft/yii2-imagine": ">=2.0.3",
+        "yiisoft/yii2-swiftmailer": "~2.0.0",
+        "bower-asset/Chart.js": "*",
+        "bower-asset/lightslider": "*",
+        "bower-asset/metisMenu": "*",
+        "bower-asset/pace": "*",
+        "bower-asset/slimScroll": "*",
+        "bower-asset/ion.rangeSlider": "*",
+        "bower-asset/slick-carousel": "*",
+        "2amigos/yii2-ckeditor-widget" : "~1.0",
+        "2amigos/yii2-type-ahead-widget": "~1.0",
+        "jisoft/yii2-sypexgeo": "dev-master",
+        "phpnt/yii2-chartjs": "*",
+        "phpnt/yii2-cropper": "*",
+        "phpnt/bootstrap-notify": "^0.0.1",
+        "phpnt/yii2-export": "*",
+        "phpnt/font-awesome": "^0.0.1",
+        "phpnt/bootstrap-select": "*",
+        "phpnt/yii2-sypexgeo": "dev-master",
+        "phpnt/yii2-oauth": "*",
+        "phpnt/yii2-wow": "*",
+        "wadeshuler/yii2-ckeditor-cdn": "~1.0",
+        "phpnt/awesome-bootstrap-checkbox": "^0.0.1",
+        "kroshilin/yii2-yandex-kassa": "^0.1.4",
+        "nodge/yii2-eauth": "*"
+    },
+    "require-dev": {
+        "yiisoft/yii2-debug": "~2.0.0",
+        "yiisoft/yii2-gii": "~2.0.0",
+        "yiisoft/yii2-faker": "~2.0.0",
+
+        "codeception/base": "^2.2.3",
+        "codeception/verify": "~0.3.1"
+    },
+    "config": {
+        "process-timeout": 1800
+    },
+    "extra": {
+        "asset-installer-paths": {
+            "npm-asset-library": "vendor/npm",
+            "bower-asset-library": "vendor/bower"
+        }
+    },
+    "scripts": {
+        "post-install-cmd": "php init --env=Development --overwrite=n"
+    }
+}

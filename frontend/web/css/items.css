@@ -1,0 +1,46 @@
+.mark-item:hover {
+    background-color: #e1e1e1 !important;
+}
+.item-card-link {
+    color: #000 !important;
+}
+.item-card-link:hover {
+    color: #000 !important;
+}
+.item-card-link:active {
+    color: #000 !important;
+}
+.item-card {
+    background-color: #fff;
+    border: 1px solid #cccccc;
+    transition-duration: 0.2s;
+    margin: 10px;
+}
+.item-card:hover {
+    background-color: #fff7bf;
+}
+.item-card-image {
+    width: 100%;
+}
+.item-card-header {
+    display: block;
+    height: 280px !important;
+    padding: 5px !important;
+}
+.item-card-period {
+
+}
+.item-card-company {
+    margin-top: 15px;
+    margin-bottom: 15px;
+}
+.item-card-button {
+    margin-bottom: 15px;
+}
+.item-card-action-image {
+    position: absolute;
+    top: -35px;
+    left: -22px;
+    z-index: 99999999999999;
+}
+

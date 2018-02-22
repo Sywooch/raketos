@@ -1,0 +1,36 @@
+.carousel-slick .slick-center a {
+    display: block !important;
+    width: 100px;
+    margin: 0 auto;
+}
+.slick-track > .pagination {
+    display: none !important;
+}
+.carousel-slick img{
+    opacity: 0.3;
+    transition: all 300ms ease 0s;
+    /*transform: scale(0.6);*/
+}
+.carousel-slick .slick-center img {
+    opacity: 1;
+    /*transform: scale(1);*/
+}
+
+.carousel-slick .slick-slide img {
+    margin: 0 auto;
+}
+
+.slick-slide div{
+    color:#ccc;
+    /*padding-top:20px;*/
+    /*font-size: 20px;*/
+}
+
+.slick-center div{
+    color:#000;
+    /*font-size: 30px;*/
+}
+
+.carousel-slick{
+    /*padding-top:50px;*/
+}
