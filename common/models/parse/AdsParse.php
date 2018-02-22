@@ -25,11 +25,13 @@ class AdsParse extends Model
 
     public function create($data)
     {
-        if($user = $this->createUser($data['user'])) {
-            if($ad = $this->createAdvertisement($data['advertisement'], $user->id)) { //TODO upload images and add watermark
+        if($user = $this->createUser($data)) {
+            if($ad = $this->createAdvertisement($data, $user->id)) {
                 $ad_characteristic = new AdsCarCharacteristic();
                 $ad_characteristic->ads_id = $ad->id;
                 $ad_characteristic->save();
+
+                $this->uploadPhotos($data);
 
                 return true;
             } else {
@@ -97,6 +99,12 @@ class AdsParse extends Model
         }
 
         return false;
+    }
+
+    //Upload Photos with watermark to advertisement
+    protected function uploadPhotos()
+    {
+        //TODO
     }
 
     //Delete user by id

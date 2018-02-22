@@ -30,9 +30,10 @@ class ParseController extends ActiveController
     public function actionCreateAds()
     {
         $model = new AdsParse();
-        if(Yii::$app->request->post('parse')):
+        
+        if(Yii::$app->request->post()):
 
-            if($model->create(Yii::$app->request->post('parse'))):
+            if($model->create(Yii::$app->request->post())):
                 return $this->response(201, ['message' => 'Record successfully created!']);
             else:
                 return $this->response(500, ['message' => 'Can\'t save record!']);
