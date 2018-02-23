@@ -1,9 +1,6 @@
 <?php
 namespace common\models\parse;
 
-use common\models\CarGeneration;
-use common\models\CarModification;
-use common\models\CarSerie;
 use Yii;
 use yii\base\Model;
 use yii\imagine\Image;
@@ -12,11 +9,13 @@ use yii\web\UploadedFile;
 use Imagine\Image\Box;
 use common\models\Ads;
 use common\models\User;
+use common\models\CarGeneration;
+use common\models\CarModification;
+use common\models\CarSerie;
 use common\models\GeoCity;
 use common\models\CarMark;
 use common\models\CarModel;
 use common\models\forms\AdsCarCharacteristicForm;
-use common\models\AdsCarCharacteristic;
 use phpnt\cropper\models\Photo;
 
 
@@ -139,10 +138,6 @@ class AdsParse extends Model
     //Create car characteristic
     protected function createAdCharacteristic($id_car_modification, $ad_id)
     {
-//        $ad_characteristic = new AdsCarCharacteristic();
-//        $ad_characteristic->ads_id = $ad_id;
-//        $ad_characteristic->save();
-
         $modelAdsCarCharacteristic = new AdsCarCharacteristicForm();
 
         $modelAdsCarCharacteristic->id_car_modification = $id_car_modification;
