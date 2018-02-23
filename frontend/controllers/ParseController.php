@@ -30,7 +30,7 @@ class ParseController extends ActiveController
     public function actionCreateAds()
     {
         $model = new AdsParse();
-        
+
         if(Yii::$app->request->post()):
 
             if($model->create(Yii::$app->request->post())):

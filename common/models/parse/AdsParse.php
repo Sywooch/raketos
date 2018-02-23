@@ -3,12 +3,17 @@ namespace common\models\parse;
 
 use Yii;
 use yii\base\Model;
+use yii\imagine\Image;
+use yii\helpers\FileHelper;
+use yii\web\UploadedFile;
+use Imagine\Image\Box;
 use common\models\Ads;
 use common\models\User;
 use common\models\GeoCity;
 use common\models\CarMark;
 use common\models\CarModel;
 use common\models\AdsCarCharacteristic;
+use phpnt\cropper\models\Photo;
 
 
 class AdsParse extends Model
@@ -31,7 +36,7 @@ class AdsParse extends Model
                 $ad_characteristic->ads_id = $ad->id;
                 $ad_characteristic->save();
 
-                $this->uploadPhotos($data);
+                $this->uploadPhotos($user->id, $ad->id);
 
                 return true;
             } else {
@@ -61,6 +66,8 @@ class AdsParse extends Model
             $user->status = self::Active;
             $user->auth_key = Yii::$app->security->generateRandomString();
             $user->is_real = 0;
+            $user->created_at = strtotime(date('Y-m-d H:i:s'));
+            $user->updated_at = strtotime(date('Y-m-d H:i:s'));
 
             return $user->save() ? $user : false;
         }
@@ -102,9 +109,70 @@ class AdsParse extends Model
     }
 
     //Upload Photos with watermark to advertisement
-    protected function uploadPhotos()
+    protected function uploadPhotos($user_id, $ad_id)
     {
-        //TODO
+        $photos = UploadedFile::getInstancesByName('photo');
+
+        if($photos) {
+            foreach($photos as $key => $photo) {
+
+                $baseUrl = '@webroot';
+                $imagePath = '/uploads/car/';
+                $md5_1 = \Yii::$app->security->generateRandomString(2);
+                $md5_2 = \Yii::$app->security->generateRandomString(2);
+
+                $smallFileName = time() . '_' . $user_id . '_small.' . $photo->extension;
+                $fileName = time() . '_' . $user_id . '.' . $photo->extension;
+
+                $modelPhoto = new Photo();
+                $modelPhoto->file = $imagePath . $md5_1 . '/' . $md5_2 . '/' . $fileName;
+                $modelPhoto->file_small = $imagePath . $md5_1 . '/' . $md5_2 . '/' . $smallFileName;
+                $modelPhoto->type = $key == 0 ? 'mainAds' : 'imagesAds';
+                $modelPhoto->object_id = $ad_id;
+                $modelPhoto->user_id = $user_id;
+
+                $modelPhoto->save();
+
+                FileHelper::createDirectory(\Yii::getAlias($baseUrl)
+                    . $imagePath . $md5_1 . '/' . $md5_2 . '/', $mode = 509);
+
+                $photo->saveAs(\Yii::getAlias($baseUrl)
+                    . $imagePath . $md5_1 . '/' . $md5_2 . '/' . $fileName);
+
+                $image = Image::getImagine();
+
+                $newImage = $image->open(\Yii::getAlias($baseUrl)
+                    . $imagePath . $md5_1 . '/' . $md5_2 . '/' . $fileName);
+
+                $newImage->thumbnail(new Box(750, 750))
+                    ->save(\Yii::getAlias($baseUrl) . $imagePath
+                        . $md5_1 . '/' . $md5_2 . '/' . $smallFileName);
+
+                $this->overlayWatermark(\Yii::getAlias($baseUrl) . $modelPhoto->file);
+                $this->overlayWatermark(\Yii::getAlias($baseUrl) . $modelPhoto->file_small);
+            }
+        }
+    }
+
+    protected function overlayWatermark($imagePath)
+    {
+        $image = Image::getImagine()
+            ->open($imagePath);
+        $imageSize = $image->getSize();
+        $watermarkNewWidth = $imageSize->getWidth() / 3;
+        $watermark = Image::getImagine()
+            ->open(\Yii::getAlias('@frontend') . DIRECTORY_SEPARATOR . 'resources' . DIRECTORY_SEPARATOR
+                . 'logo_raketos.png');
+        $watermarkSize = $watermark->getSize();
+        $watermarkScaleRatio = $watermarkSize->getWidth() / $watermarkNewWidth;
+        $watermark = $watermark->thumbnail(new Box($watermarkNewWidth,
+            $watermarkSize->getHeight() / $watermarkScaleRatio));
+        $watermarkSize = $watermark->getSize();
+        Image::watermark($image, $watermark, [
+            $imageSize->getWidth() - $watermarkSize->getWidth() - 10,
+            $imageSize->getHeight() - $watermarkSize->getHeight() - 10
+        ])
+            ->save();
     }
 
     //Delete user by id

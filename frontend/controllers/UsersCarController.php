@@ -118,7 +118,6 @@ class UsersCarController extends Controller
     public function actionView($id)
     {
         $model = $this->findModel($id);
-       
        // if (isset($model->profile_id)){
             $profile_model = Profiles::findOne(['id'=>$model->profile_id]);
        // }
@@ -136,7 +135,7 @@ class UsersCarController extends Controller
             'dataProvider' => $dataProvider,
             'model' => $model,
             'user' => $user,
-            'profile_model' => $profile_model    
+            'profile_model' => $profile_model
         ]);
     }
 
