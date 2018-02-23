@@ -1,6 +1,9 @@
 <?php
 namespace common\models\parse;
 
+use common\models\CarGeneration;
+use common\models\CarModification;
+use common\models\CarSerie;
 use Yii;
 use yii\base\Model;
 use yii\imagine\Image;
@@ -12,6 +15,7 @@ use common\models\User;
 use common\models\GeoCity;
 use common\models\CarMark;
 use common\models\CarModel;
+use common\models\forms\AdsCarCharacteristicForm;
 use common\models\AdsCarCharacteristic;
 use phpnt\cropper\models\Photo;
 
@@ -32,10 +36,8 @@ class AdsParse extends Model
     {
         if($user = $this->createUser($data)) {
             if($ad = $this->createAdvertisement($data, $user->id)) {
-                $ad_characteristic = new AdsCarCharacteristic();
-                $ad_characteristic->ads_id = $ad->id;
-                $ad_characteristic->save();
 
+                $this->createAdCharacteristic($ad->id_car_modification, $ad->id);
                 $this->uploadPhotos($user->id, $ad->id);
 
                 return true;
@@ -87,6 +89,29 @@ class AdsParse extends Model
             $city = GeoCity::findOne(['name_ru' => $ad_data['city']]);
 
             if($mark && $model && $city){
+
+                if(isset($ad_data['generation']) && $ad_data){
+                    $car_generation = CarGeneration::findOne([
+                        'name' => $ad_data['generation'],
+                        'id_car_model' => $model->id_car_model]
+                    );
+                }
+
+                if(isset($ad_data['serie']) && $ad_data && isset($car_generation)){
+                    $car_serie = CarSerie::findOne([
+                        'name' => $ad_data['serie'],
+                        'id_car_model' => $model->id_car_model,
+                        'id_car_generation' => $car_generation->id_car_generation
+                    ]);
+                }
+
+                if(isset($ad_data['modification']) && $ad_data['modification'] && isset($car_serie)){
+                    $car_modification = CarModification::findOne([
+                        'id_car_serie' => $car_serie->id_car_serie,
+                        'id_car_model' => $model->id_car_model
+                    ]);
+                }
+
                 $ad->id_car_mark = $mark->id_car_mark;
                 $ad->id_car_model = $model->id_car_model;
                 $ad->mileage = $ad_data['mileage'];
@@ -98,6 +123,9 @@ class AdsParse extends Model
                 $ad->temp = self::Hidden;
                 $ad->created_at = strtotime(date('Y-m-d H:i:s'));
                 $ad->updated_at = strtotime(date('Y-m-d H:i:s'));
+                $ad->id_car_generation = isset($car_generation) ? $car_generation->id_car_generation : null;
+                $ad->id_car_serie = isset($car_serie) ? $car_serie->id_car_serie : null;
+                $ad->id_car_modification = isset($car_modification) ? $car_modification->id_car_modification : null;
 
                 return $ad->save() ? $ad : false;
             }
@@ -106,6 +134,20 @@ class AdsParse extends Model
         }
 
         return false;
+    }
+
+    //Create car characteristic
+    protected function createAdCharacteristic($id_car_modification, $ad_id)
+    {
+//        $ad_characteristic = new AdsCarCharacteristic();
+//        $ad_characteristic->ads_id = $ad_id;
+//        $ad_characteristic->save();
+
+        $modelAdsCarCharacteristic = new AdsCarCharacteristicForm();
+
+        $modelAdsCarCharacteristic->id_car_modification = $id_car_modification;
+        $modelAdsCarCharacteristic->ads_id = $ad_id;
+        $modelAdsCarCharacteristic->save();
     }
 
     //Upload Photos with watermark to advertisement
